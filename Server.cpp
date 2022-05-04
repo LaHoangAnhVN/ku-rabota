@@ -9,14 +9,14 @@ class server{
     int _listening_socket;
     void Listen(int sock_fd, sockaddr_in addr){
         std::cout<<inet_ntoa(addr.sin_addr)<<":"<<ntohs(addr.sin_port)<<std::endl;
-        int buff ;
-        if(!try_send(sock_fd, buff)) return;
-        int msg;
-        if(!try_recv(sock_fd, msg)) return;
-        std::cout<<"Get message:"<<msg<<std::endl;
-        int answer = 1;
-        if(!try_send(sock_fd, answer)) return;
-        //if(!try_recv(sock_fd, buff)) return;
+        int user_id;
+        if(!try_recv(sock_fd, user_id)) return;
+        std::cout<<"Get UID:"<<user_id<<std::endl;
+
+        Request request;
+        if(!try_recv(sock_fd, request)) return;
+        sec_open(request.name, O_APPEND);
+        std::cout<<"File opened"<<std::endl;
     }
 public:
     server(unsigned short port){

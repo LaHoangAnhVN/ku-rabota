@@ -20,7 +20,7 @@ struct Request{
 
 inline bool try_send(int fd, const Request& request){
     errno = 0;
-    int size = check_except(send(fd, &request, sizeof(char), 0), EPIPE);
+    int size = check_except(send(fd, &request, sizeof(Request), 0), EPIPE);
     return size>0;
 }
 

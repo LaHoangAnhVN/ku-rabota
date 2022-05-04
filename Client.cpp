@@ -1,28 +1,25 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <string>
+#include <string.h>
 #include <iostream>
 #include "common.h"
 
 class Client{
     int _socket;
     void Send(){
-        int msg;
-        if(!try_recv(_socket, msg)) return;
-
-
-        int len;
         struct ucred cred;
         cred.uid = getuid();
-        //len = sizeof(cred);
-        //check(getsockopt(_socket, SOL_SOCKET, SO_PEERCRED, &cred, &len));
-
         int buff = cred.uid;
-        std::cout<<"Message: " << buff;
-        //std::cin>>buff;
+        //std::cout<<"UID: " << buff;
         if(!try_send(_socket, buff)) return;
-        int answer;
-        if(!try_recv(_socket, answer)) return;
+
+        Request request;
+        request.target_uid = buff;
+        request.mode = S_IRUSR;
+        strcpy(request.name, "test.txt");
+        request.rights = R_READ;
+        if(!try_send(_socket, request)) return;
     }
 public:
     void start(int port){

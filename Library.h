@@ -1,4 +1,11 @@
 #include <cstdlib>
+#include <sys/stat.h>
+#include <cstdio>
+#include <unistd.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include<iostream>
+
 
 enum right_t{
     R_READ = 1,
@@ -8,7 +15,13 @@ enum right_t{
 
 int sec_init();
 
-int sec_open(const char* name, mode_t mode);
+int sec_open(const char* name, mode_t mode){
+    int fp = open(name, mode);
+    char buf[] = "bye";
+    int data = write(fp, buf, sizeof(buf)/ sizeof(char));
+    //std::cout<<buf;
+    return data;
+}
 
 int sec_opentat(int uid, const char* name, mode_t mode);
 
